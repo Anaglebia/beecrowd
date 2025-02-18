@@ -1,39 +1,44 @@
 var input = require('fs').readFileSync('/dev/stdin', 'utf8');
 var lines = input.split('\n');
 
-function jornadaNasEstrelas(N, carneiros) {
-    let visitados = new Array(N).fill(false);
-    let estrelasAtacadas = 0;
-    let totalCarneiros = 0;
-    let i = 0;
+function startTrek() {
+    const input = require('fs').readFileSync('/dev/stdin', 'utf8').split('\n');
+    
+    const N = parseInt(input[0].trim(), 10);
+    const carneiro = input[1].trim().split(' ').map(Number);
+    const estrela = Array(N).fill(0);
 
-    while (i >= 0 && i < N) {
-        if (!visitados[i]) {
-            estrelasAtacadas++; 
-            visitados[i] = true;
-        }
+    let totalEstrela = 0;
+    let totalCarneiro = 0;
 
-        if (carneiros[i] > 0) {
-            carneiros[i]--;
-        }
+    let j = 0;
 
-
-        if (carneiros[i] % 2 === 1) {
-            i++; 
-        } else {
-            i--;
+    while (true) {
+        if (j === 0 && carneiro[j] % 2 === 0) {
+            estrela[j] = 1;
+            if (carneiro[j] > 0) carneiro[j]--;
+            break;
+        } else if (j === (N - 1) && carneiro[j] % 2 === 1) {
+            estrela[j] = 1;
+            if (carneiro[j] > 0) carneiro[j]--;
+            break;
+        } else if (carneiro[j] % 2 === 1) {
+            if (carneiro[j] > 0) carneiro[j]--;
+            estrela[j] = 1;
+            j++;
+        } else if (carneiro[j] % 2 === 0) {
+            estrela[j] = 1;
+            if (carneiro[j] > 0) carneiro[j]--;
+            j--;
         }
     }
 
-   
-    totalCarneiros = carneiros.reduce((acc, val) => acc + val, 0);
+    for (let i = 0; i < N; i++) {
+        totalCarneiro += carneiro[i];
+        totalEstrela += estrela[i];
+    }
 
-    return [estrelasAtacadas, totalCarneiros];
+    console.log(`${totalEstrela} ${totalCarneiro}`);
 }
 
-
-const N = parseInt(lines[0]);
-const carneiros = lines[1].split(' ').map(Number);
-
-const [estrelasAtacadas, totalCarneiros] = jornadaNasEstrelas(N, carneiros);
-console.log(estrelasAtacadas, totalCarneiros);
+startTrek();

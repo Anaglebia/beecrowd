@@ -1,24 +1,31 @@
-const input = require('fs').readFileSync('/dev/stdin', 'utf8');
-const lines = input.split('\n');
 
-function translateToHTML(text) {
-    let italic = true;
-    text = text.replace(/_/g, () => {
-        italic = !italic;
-        return italic ? '</i>' : '<i>';
-    });
-    let bold = true;
-    text = text.replace(/\*/g, () => {
-        bold = !bold;
-        return bold ? '</b>' : '<b>';
+function processarFrase() {
+    const readline = require('readline');
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
     });
 
-    return text;
+    rl.on('line', (frase) => {
+        let negrito = 0;
+        let italico = 0;
+        let n = frase.length;
+        let resultado = '';
+
+        for (let i = 0; i < n; ++i) {
+            if (frase[i] === '_') {
+                resultado += italico ? '</i>' : '<i>';
+                italico = 1 - italico;
+            } else if (frase[i] === '*') {
+                resultado += negrito ? '</b>' : '<b>';
+                negrito = 1 - negrito;
+            } else {
+                resultado += frase[i];
+            }
+        }
+
+        console.log(resultado);
+    });
 }
 
-for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim(); 
-    if (line === '') continue; 
-    const translatedText = translateToHTML(line);
-    console.log(translatedText);
-}
+processarFrase();
